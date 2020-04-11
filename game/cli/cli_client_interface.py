@@ -1,4 +1,4 @@
-from client_interface import ClientInterface
+from game.core.client_interface import ClientInterface
 
 
 class CLIClientInterface(ClientInterface):

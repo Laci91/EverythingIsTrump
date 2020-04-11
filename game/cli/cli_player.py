@@ -1,5 +1,5 @@
-from player import Player
-from card import Card
+from game.core.player import Player
+from game.core.model import Card
 
 
 class CLIPlayer(Player):
