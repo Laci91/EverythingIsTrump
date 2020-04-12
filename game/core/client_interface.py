@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class ClientInterface(ABC):
     @abstractmethod
-    def send_error(self, seat, error_message):
+    def send_error(self, error_message):
         pass
     
     @abstractmethod
@@ -31,7 +31,7 @@ class ClientInterface(ABC):
         pass
     
     @abstractmethod
-    def trigger_new_round(self, next_round):
+    def trigger_new_round(self, players, next_round):
         pass
 
     @abstractmethod

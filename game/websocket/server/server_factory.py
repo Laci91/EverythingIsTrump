@@ -1,10 +1,18 @@
 from autobahn.asyncio.websocket import WebSocketServerFactory
 import json
 
-from core.board import Board
-from core.client_interface import ClientInterface
+from game.core.board import Board
+from game.core.client_interface import ClientInterface
 from game.websocket.server.waiting_room import WaitingRoom
 from game.websocket.server.server_protocol import EverythingIsTrumpServerProtocol
+
+
+def _default(self, obj):
+    return getattr(obj.__class__, "to_json", _default.default)(obj)
+
+
+_default.default = json.JSONEncoder().default
+json.JSONEncoder.default = _default
 
 
 def send_text_message(client, message):
@@ -32,7 +40,8 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             send_text_message(client, {"function": "seat-trigger", "message": "Please take a seat"})
     
     def take_seat(self, client, name, seat):
-        if seat > 4 or seat < 0:
+        print("Try seating %s to %d" % (name, seat))
+        if seat > 4 or seat < 1:
             send_text_message(client,
                               {"function": "seat", "status": "fail",
                                "message": "Seats are numbered 1-4, please select one from these"})
@@ -44,27 +53,37 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
         else:
             print("Seat is free")
             send_text_message(client,
-                              {"function": "seat", "status": "success",
+                              {"function": "seat", "status": "success", "seat": seat,
                                "message": "Joined the seat successfully"})
             
             self.waiting_room.register_player(name, seat)
             self.clients[seat] = client
+            client.seat = seat
             print("Successfully joined the game, %d players are waiting for the game to begin" % len(
                 self.waiting_room.players))
         
         if self.waiting_room.is_full():
-            self.start_game()
+            self.start_game(self.waiting_room.players)
     
-    def start_game(self):
+    def start_game(self, players):
         print("Broadcasting start message")
         self.broadcast({"function": "info", "message": "Let's start"})
-        self.trigger_new_round(1)
+        self.trigger_new_round(players, 1)
     
     def make_bid(self, seat, bid):
-        self.game.current_board.register_bid(seat, bid)
+        if seat != self.board.active_player:
+            self.send_error("It is not your turn")
+        
+        self.board.register_bid(bid)
     
-    def send_error(self, seat, error_message):
-        self.send_dedicated_message(seat, {"function": "error", "message": error_message})
+    def make_play(self, seat, card):
+        if seat != self.board.active_player:
+            self.send_error("It is not your turn")
+        
+        self.board.register_played_card(card)
+    
+    def send_error(self, error_message):
+        self.send_dedicated_message(self.board.active_player, {"function": "error", "message": error_message})
     
     def send_trick_evaluation(self, trick_status_message):
         self.broadcast({"function": "trick", "number": trick_status_message["trickNumber"],
@@ -81,18 +100,21 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     
     def communicate_next_bidder(self, next_player):
         self.broadcast({"function": "next-player", "seat": next_player})
-        self.send_dedicated_message(self.clients[next_player], {"function": "bid-trigger"})
+        self.send_dedicated_message(next_player, {"function": "bid-trigger"})
+        
+    def communicate_play(self, seat, card):
+        self.broadcast({"function": "play-info", "seat": seat, "card": card})
     
     def communicate_next_card_player(self, next_player):
         self.broadcast({"function": "next-player", "seat": next_player})
-        self.send_dedicated_message(self.clients[next_player], {"function": "play-trigger"})
+        self.send_dedicated_message(next_player, {"function": "play-trigger"})
     
-    def trigger_new_round(self, next_round):
-        self.board = Board(self.client_interface, self.players, next_round, (next_round - 1) % len(self.players))
+    def trigger_new_round(self, players, next_round):
+        self.board = Board(self, players, next_round, (next_round - 1) % len(players) + 1)
         self.board.deal()
-        for seat in self.clients.values():
-            client = self.client[seat]
-            hand = self.game.players[seat].hand
+        for seat in self.clients:
+            client = self.clients[seat]
+            hand = self.board.players[seat].hand
             send_text_message(client, {"function": "deal", "hand": hand})
         
         self.board.start_bidding()
