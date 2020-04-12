@@ -87,6 +87,9 @@ class Card:
         suit = short_name[0]
         number = short_name[1]
         return Card(Suit.from_short_name(suit), Number.from_short_name(number))
+
+    def to_json(self):
+        return self.__repr__()
     
     def __repr__(self):
         return self.suit.short_name + self.number.short_name

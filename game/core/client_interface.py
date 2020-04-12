@@ -15,13 +15,25 @@ class ClientInterface(ABC):
         pass
     
     @abstractmethod
-    def send_standing_update(self, sending_update):
+    def send_standing_update(self, standing_update):
+        pass
+
+    @abstractmethod
+    def communicate_bid(self, seat, bid):
+        pass
+
+    @abstractmethod
+    def communicate_next_bidder(self, next_player):
+        pass
+
+    @abstractmethod
+    def communicate_next_card_player(self, next_player):
         pass
     
     @abstractmethod
-    def query_bid(self, hand, excluded_bid):
+    def trigger_new_round(self, players, next_round):
         pass
-    
+
     @abstractmethod
-    def query_card_play(self, hand, led_suit):
+    def trigger_end_of_game(self):
         pass
