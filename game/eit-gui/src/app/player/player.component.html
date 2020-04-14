@@ -1,0 +1,14 @@
+<div>
+  <div fxLayout="row nowrap" fxLayoutAlign="center center" *ngFor="let card of cards">
+    <div><img class="card-img" [src]="getImagePath(card)" (click)="playCard(card)" /></div>
+  </div>
+  <div *ngIf="!seatingRequired" [ngClass]="active ? 'active' : 'inactive'">
+    <div class="name-class">{{name}}</div>
+    <div class="attribute-class"><b>Bid: </b>{{bid !== undefined ? bid : '-'}}</div>
+    <div class="attribute-class"><b>Tricks: </b>{{tricks !== undefined ? tricks : '-'}}</div>
+  </div>
+  <div *ngIf="seatingRequired">
+    <input class="centered" matInput type="text" (input)="name = $event.target.value" />
+    <button class="centered" mat-button (click)="takeSeat()">Take this seat</button>
+  </div>
+</div>

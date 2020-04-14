@@ -11,7 +11,7 @@ class Player:
         self.points = 0
         
     def __repr__(self):
-        return "%s (%d)" % (self.name, self.number)
+        return "%s (%d) -> %d/%d" % (self.name, self.number, self.tricks, self.bid)
     
     def new_board(self):
         self.tricks = 0

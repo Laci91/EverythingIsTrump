@@ -37,7 +37,17 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
         if self.waiting_room.is_full():
             client.sendClose("Sorry, this game is full, you can't join")
         else:
-            send_text_message(client, {"function": "seat-trigger", "message": "Please take a seat"})
+            player_map = {}
+            for seat in self.waiting_room.players:
+                player_map[seat] = self.waiting_room.players[seat].name
+            send_text_message(client, {"function": "seat-trigger", "players": player_map,
+                                       "message": "Please take a seat"})
+            
+    def close_connection(self, client):
+        print ("Player %d left the game" % client.seat)
+        self.waiting_room.unregister_player(client.seat)
+        self.clients.pop(client.seat)
+        self.broadcast({"function": "lost-player", "seat": client.seat})
     
     def take_seat(self, client, name, seat):
         print("Try seating %s to %d" % (name, seat))
@@ -59,6 +69,7 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             self.waiting_room.register_player(name, seat)
             self.clients[seat] = client
             client.seat = seat
+            self.broadcast({"function": "new-player", "seat": seat, "name": name})
             print("Successfully joined the game, %d players are waiting for the game to begin" % len(
                 self.waiting_room.players))
         
@@ -112,10 +123,18 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     def trigger_new_round(self, players, next_round):
         self.board = Board(self, players, next_round, (next_round - 1) % len(players) + 1)
         self.board.deal()
-        for seat in self.clients:
-            client = self.clients[seat]
-            hand = self.board.players[seat].hand
-            send_text_message(client, {"function": "deal", "hand": hand})
+        if self.board.num_of_cards == 1:
+            hands = {}
+            for seat in self.clients:
+                hand = self.board.players[seat].hand
+                hands[seat] = hand
+                
+            self.broadcast({"function": "deal", "card-on-forehead": True, "hand": hands})
+        else:
+            for seat in self.clients:
+                client = self.clients[seat]
+                hand = self.board.players[seat].hand
+                send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
         
         self.board.start_bidding()
     
