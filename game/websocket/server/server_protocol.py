@@ -9,6 +9,10 @@ class EverythingIsTrumpServerProtocol(WebSocketServerProtocol):
     
     def onOpen(self):
         self.factory.open_connection(self)
+        
+    def onClose(self, wasClean, code, reason):
+        self.factory.close_connection(self)
+        super().onClose(wasClean, code, reason)
     
     def onMessage(self, payload, isBinary):
         if isBinary:

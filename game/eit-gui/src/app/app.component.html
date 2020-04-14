@@ -1,0 +1,11 @@
+<mat-grid-list cols="3" rowHeight="2.2:1">
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile><player seat="3" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile><leaderboard></leaderboard></mat-grid-tile>
+  <mat-grid-tile><player seat="2" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile><play-area></play-area></mat-grid-tile>
+  <mat-grid-tile><player seat="4" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile>{{statusInfo}}</mat-grid-tile>
+  <mat-grid-tile><player seat="1" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile><bid-slider *ngIf="biddingPanelEnabled" [numberOfCards]="numOfCards" (sendBid)="bidHandler($event)"></bid-slider></mat-grid-tile>
+</mat-grid-list>

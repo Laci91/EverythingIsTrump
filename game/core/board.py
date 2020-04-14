@@ -63,6 +63,7 @@ class Board:
         self.client_interface.communicate_bid(self.active_player, bid)
         
         if len([player.bid for player in self.players.values() if player.bid is not None]) == 4:
+            self.move_active_player()
             self.start_new_play_round()
         else:
             self.move_active_player()
@@ -124,17 +125,17 @@ class Board:
         self.players[self.active_player].tricks += 1
         self.trick_number += 1
         self.active_played_cards = []
-        
+
+        self.client_interface.send_trick_evaluation({"trickNumber": self.trick_number, "taker": self.active_player})
         if self.trick_number == self.num_of_cards:
             self.evaluate()
         else:
-            self.client_interface.send_trick_evaluation(
-                {"trickNumber": self.trick_number, "taker": self.active_player})
             self.client_interface.communicate_next_card_player(self.active_player)
     
     def evaluate(self):
         client_updates = []
         for player in self.players.values():
+            print(player)
             if player.tricks == player.bid:
                 client_updates.append({"player": player.number, "status": "success", "bid": player.bid,
                                        "tricks": player.tricks, "points": 10 + player.tricks * 2})

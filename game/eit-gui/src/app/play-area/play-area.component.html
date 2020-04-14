@@ -1,0 +1,9 @@
+<div class="flex-container-row" fxLayoutGap="10px">
+  <div><img [src]="getPlayedCard(2)" [ngStyle]="{'visibility': isCardHidden(2) ? 'hidden' : 'visible'}" class="card-img" /></div>
+  <div class="flex-container" fxLayoutGap="10px">
+    <img [src]="getPlayedCard(3)" [ngStyle]="{'visibility': isCardHidden(3) ? 'hidden' : 'visible'}" class="card-img" />
+    <img [src]="getPlayedCard(1)" [ngStyle]="{'visibility': isCardHidden(1) ? 'hidden' : 'visible'}" class="card-img" />
+  </div>
+  <div><img [src]="getPlayedCard(4)" [ngStyle]="{'visibility': isCardHidden(4) ? 'hidden' : 'visible'}" class="card-img" /></div>
+
+</div>
