@@ -1,5 +1,19 @@
 table {
     width: 450px;
     height: 200px;
-    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color: white;
+}
+
+tr {
+    line-height: 30px;
+}
+
+.centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bold {
+    font-weight: bold;
 }

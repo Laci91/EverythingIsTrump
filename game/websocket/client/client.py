@@ -3,7 +3,6 @@ import json
 import sys
 from autobahn.asyncio import WebSocketClientFactory, WebSocketClientProtocol
 
-
 NAME = None
 SEAT = None
 
@@ -19,12 +18,12 @@ class MyClientProtocol(WebSocketClientProtocol):
         self.seat = None
         self.bidding_in_progress = False
         self.cardplay_in_progress = False
-        
+    
     def onOpen(self):
         print(NAME)
         print(SEAT)
         send_text_message(self, {"function": "seat", "name": NAME, "seat": SEAT})
-            
+    
     def onMessage(self, payload, isBinary):
         decoded = payload.decode("utf-8")
         msg = json.loads(decoded)
@@ -80,11 +79,11 @@ class MyClientProtocol(WebSocketClientProtocol):
             for update in msg["updates"]:
                 print("Player %s failed (bid %d, made %s), got %d points" % (
                     update["player"], update["bid"], update["tricks"], update["points"]))
-                
+    
     def bid(self):
         bid = int(input("Bid: "))
         send_text_message(self, {"function": "bid", "bid": bid})
-        
+    
     def play_card(self):
         card = input("Card: ")
         send_text_message(self, {"function": "play", "card": card})
@@ -96,7 +95,7 @@ if __name__ == '__main__':
     
     NAME = sys.argv[1]
     SEAT = int(sys.argv[2])
-
+    
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(factory, '127.0.0.1', 8765)
     loop.run_until_complete(coro)

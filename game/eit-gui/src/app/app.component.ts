@@ -8,8 +8,7 @@ import { GameService } from './game-service/game.service';
 })
 export class AppComponent implements OnInit {
   title = 'eit-gui';
-  statusInfo: string;
-  numOfCards: number; // TODO: Move to bid-lider
+  numOfCards: number; // TODO: Move to bid-slider
   seatOfActivePlayer: number;
   biddingPanelEnabled: boolean;
   cardplayPanelEnabled: boolean;
@@ -51,7 +50,6 @@ export class AppComponent implements OnInit {
   }
 
   bidHandler(bid: number) {
-    this.statusInfo = "You made this bid: " + bid
     this.gameService.sendBid(bid);
   }
 
