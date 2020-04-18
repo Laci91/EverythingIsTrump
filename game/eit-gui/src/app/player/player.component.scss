@@ -6,12 +6,20 @@
 }
 .flex-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
 }
 .card-img {
-    width: 50px;
+    width: 75px;
+}
+.card-container {
+    width: 450px;
+}
+.name-container {
+    margin-left: auto;
+    margin-right: auto;
 }
 .centered {
     display: block;

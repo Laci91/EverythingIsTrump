@@ -1,0 +1,21 @@
+.info-panel {
+    max-width: 450px;
+    width: 450px;
+    max-height: 200px;
+    height: 200px;
+    background-color: white;
+}
+
+.mat-card.scrollable-content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  
+    > .mat-card-title-group {
+      display: block;
+    }
+  
+    > .mat-card-content {
+      overflow-y: auto;
+    }
+  }

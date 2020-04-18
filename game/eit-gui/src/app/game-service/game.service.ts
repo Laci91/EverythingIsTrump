@@ -66,14 +66,17 @@ export class GameService {
       if (incoming["function"] === "standings") {
         let standings = <any[]> incoming["standings"];
         this.updateLeaderboard(standings);
+        this.updateStatus("Leaderboard has been refreshed");
       } else if (incoming["function"] == "bid-info") {
         const seat = <number> incoming["seat"];
         const bid = <number> incoming["bid"];
         this.updateBid(seat, bid);
+        this.updateStatus(`Player #${seat} bid ${bid}`);
       } else if (incoming["function"] == "play-info") {
         const seat = <number> incoming["seat"];
         const card = <string> incoming["card"];
         this.updatePlay(seat, card);
+        this.updateStatus(`Player #${seat} played ${card}`);
       } else if (incoming["function"] == "deal") {
         if (incoming["card-on-forehead"]) {
           const hands = <any[]> incoming["hand"];
@@ -82,32 +85,43 @@ export class GameService {
           const hand = <string[]> incoming["hand"];
           this.updateHand(hand);
         }
+        this.updateStatus("A new deal has begun, you received new cards");
       } else if (incoming["function"] == "trick") {
         const taker = <number> incoming["taker"];
         this.updateTrick(taker);
+        this.updateStatus(`Player #${taker} took the trick`);
       } else if (incoming["function"] == "next-player") {
         const seat = <number> incoming["seat"];
         this.updateActivePlayer(seat);
+        this.updateStatus(`It's player #${seat}'s turn`);
       } else if (incoming["function"] == "bid-trigger") {
         this.triggerBiddingPanel();
+        this.updateStatus("It's your turn to bid!");
       } else if (incoming["function"] == "play-trigger") {
         this.triggerCardplayPanel();
+        this.updateStatus("It's your turn to play a card!");
       } else if (incoming["function"] == "seat-trigger") {
         const players = <any[]> incoming["players"];
         this.triggerSeating(players);
+        this.updateStatus("Please take a seat");
       } else if (incoming["function"] == "seat") {
         const success = incoming["status"] === "success";
         const seat = <number> incoming["seat"];
         if (success) {
           this.updateSeating(seat);
+          this.updateStatus("Seating is successful, waiting for 4 players to join");
+        } else {
+          this.updateStatus("Something went wrong with seating");
         }
       } else if (incoming["function"] == "new-player") {
         const seat = <number> incoming["seat"];
         const name = <string> incoming["name"];
         this.addNewPlayer(seat, name);
+        this.updateStatus(`A new player, ${name}, took seat #${seat}`);
       } else if (incoming["function"] == "lost-player") {
         const seat = <number> incoming["seat"]
         this.removeLostPlayer(seat);
+        this.updateStatus(`The player in seat #${seat} left the game`);
       }
     });
   }
@@ -157,6 +171,10 @@ export class GameService {
 
   updateSingleCards(hands: any[]) {
     this.singleCardUpdateBehaviorSubject.next(hands);
+  }
+
+  updateStatus(message: string) {
+    this.statusMessageBehaviorSubject.next(message);
   }
 
   triggerBiddingPanel() {

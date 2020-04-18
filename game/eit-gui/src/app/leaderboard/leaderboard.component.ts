@@ -7,7 +7,7 @@ import { GameService } from '../game-service/game.service';
   styleUrls: ['./leaderboard.component.scss']
 })
 export class LeaderboardComponent implements OnInit {
-  displayedColumns = ["round", "1", "2", "3", "4"];
+  displayedColumns = ["Round", "1", "2", "3", "4"];
 
   pointCounts: any[];
   lastRound: number = 0;
