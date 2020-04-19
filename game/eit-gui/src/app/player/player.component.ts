@@ -113,6 +113,7 @@ export class PlayerComponent implements OnInit {
     this.gameService.playUpdate.subscribe(update => {
       if ((update.seat == this.seat) && this.visible) {
         this.cards = this.cards.filter(item => item !== update.card);
+        this.cardplayRequired = false;
       } else if (update.seat == this.seat) {
         this.cards.pop();
       }
@@ -136,12 +137,19 @@ export class PlayerComponent implements OnInit {
   playCard(card: string) {
     if (this.instructable && this.cardplayRequired) {
       this.gameService.sendPlay(card);
-      this.cardplayRequired = false;
     }
   }
 
   takeSeat() {
     this.gameService.takeSeat(this.seat, this.name);
+  }
+
+  getStyling(index: number) {
+    return {
+      'position': 'relative',
+      'width.px': 75,
+      'margin-right.px': -50
+    }
   }
 
 }

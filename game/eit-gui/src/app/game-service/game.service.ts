@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { LeaderboardUpdate, LeaderboardEntry } from '../model/leaderboard-update';
@@ -85,11 +85,12 @@ export class GameService {
           const hand = <string[]> incoming["hand"];
           this.updateHand(hand);
         }
-        this.updateStatus("A new deal has begun, you received new cards");
+        this.updateStatus("A new hand has begun, you received new cards");
       } else if (incoming["function"] == "trick") {
         const taker = <number> incoming["taker"];
+        const highCard = incoming["high-card"];
         this.updateTrick(taker);
-        this.updateStatus(`Player #${taker} took the trick`);
+        this.updateStatus(`Player #${taker} took the trick with ${highCard}`);
       } else if (incoming["function"] == "next-player") {
         const seat = <number> incoming["seat"];
         this.updateActivePlayer(seat);
@@ -119,10 +120,26 @@ export class GameService {
         this.addNewPlayer(seat, name);
         this.updateStatus(`A new player, ${name}, took seat #${seat}`);
       } else if (incoming["function"] == "lost-player") {
-        const seat = <number> incoming["seat"]
+        const seat = <number> incoming["seat"];
         this.removeLostPlayer(seat);
         this.updateStatus(`The player in seat #${seat} left the game`);
+      } else if (incoming["function"] == "error") {
+        const msg = incoming["message"];
+        this.updateStatus(msg);
+      } else if (incoming["function"] == "round") {
+        const updates = incoming["updates"];
+        this.sendRoundUpdates(updates);
       }
+    });
+  }
+
+  sendRoundUpdates(updates: any[]) {
+    updates.forEach(update => {
+      const player = <number> update["player"];
+      const bid =  <number> update["bid"];
+      const tricks = <number> update["tricks"];
+      const points = <number> update["points"];
+      this.updateStatus(`Player #${player} bid ${bid}, made ${tricks} tricks, got ${points} points`);
     });
   }
 
@@ -198,10 +215,6 @@ export class GameService {
 
   removeLostPlayer(seat: number) {
     this.lostPlayerBehaviorSubject.next(seat);
-  }
-
-  sendStatusMessage(message: string) {
-    this.statusMessageBehaviorSubject.next(message);
   }
 
   sendBid(bid: number) {
