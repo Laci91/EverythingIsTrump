@@ -101,9 +101,9 @@ class Card:
 def is_higher(card1, card2, not_trump):
     if not_trump:
         if card1.suit != not_trump and card2.suit != not_trump:
-            return True if card1.number > card2.number or (card1.number == card2.number and card1.suit > card2.suit) else False
+            return (card1.number > card2.number) or (card1.number == card2.number and card1.suit > card2.suit)
         elif card1.suit == not_trump and card2.suit == not_trump:
-            return True if card1.number > card2.number else False
+            return card1.number > card2.number
         elif card1.suit == not_trump:
             return False
         else:

@@ -4,18 +4,14 @@
 .inactive {
     font-weight: normal;
 }
-.flex-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-}
 .card-img {
     width: 75px;
+    position: relative;
 }
-.card-container {
+.fix-div {
+    height: 120px;
     width: 450px;
+    display: flex;
 }
 .name-container {
     margin-left: auto;
@@ -26,7 +22,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-
 .name-class {
     font-size: 24px;
 }

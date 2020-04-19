@@ -35,7 +35,7 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     def open_connection(self, client):
         print("Accepting new connection")
         if self.waiting_room.is_full():
-            client.sendClose("Sorry, this game is full, you can't join")
+            client.sendClose(1)
         else:
             player_map = {}
             for seat in self.waiting_room.players:
@@ -98,6 +98,7 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     
     def send_trick_evaluation(self, trick_status_message):
         self.broadcast({"function": "trick", "number": trick_status_message["trickNumber"],
+                        "high-card": trick_status_message["high-card"],
                         "taker": trick_status_message["taker"]})
     
     def send_round_evaluation(self, result_updates):

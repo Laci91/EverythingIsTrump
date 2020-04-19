@@ -111,7 +111,7 @@ class Board:
     def evaluate_trick(self):
         not_trump = self.active_played_cards[0].suit
         high_card = self.active_played_cards[0]
-        high_card_place = self.leading_player
+        high_card_place = 1
         counter = 1
         for c in self.active_played_cards:
             if is_higher(c, high_card, not_trump):
@@ -126,7 +126,7 @@ class Board:
         self.trick_number += 1
         self.active_played_cards = []
 
-        self.client_interface.send_trick_evaluation({"trickNumber": self.trick_number, "taker": self.active_player})
+        self.client_interface.send_trick_evaluation({"trickNumber": self.trick_number, "taker": self.active_player, "high-card": high_card})
         if self.trick_number == self.num_of_cards:
             self.evaluate()
         else:

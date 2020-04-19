@@ -15,6 +15,7 @@ export class StatusPanelComponent implements OnInit {
   ngOnInit() {
     this.gameService.statusMessage.subscribe(update => {
       this.statusMessages = this.statusMessages.concat(update);
+      console.log(this.statusMessages);
     })
   }
 

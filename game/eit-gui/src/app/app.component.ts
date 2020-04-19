@@ -11,7 +11,6 @@ export class AppComponent implements OnInit {
   numOfCards: number; // TODO: Move to bid-slider
   seatOfActivePlayer: number;
   biddingPanelEnabled: boolean;
-  cardplayPanelEnabled: boolean;
 
   constructor(private gameService: GameService) {}
 
@@ -22,21 +21,9 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.gameService.playTrigger.subscribe(update => {
-      if (update) {
-        this.cardplayPanelEnabled = true;
-      }
-    });
-
     this.gameService.bidUpdate.subscribe(update => {
       if (update.seat == this.seatOfActivePlayer) {
         this.biddingPanelEnabled = false;
-      }
-    });
-
-    this.gameService.playUpdate.subscribe(update => {
-      if (update.seat == this.seatOfActivePlayer) {
-        this.cardplayPanelEnabled = false;
       }
     });
 

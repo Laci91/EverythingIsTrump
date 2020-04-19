@@ -1,6 +1,6 @@
 <div>
-  <div fxLayout="row nowrap">
-    <div *ngFor="let card of cards; let i = index">
+  <div class="fix-div">
+    <div *ngFor="let card of cards; let i = index" [ngStyle]="getStyling(i)">
       <img class="card-img" [src]="getImagePath(card)" (click)="playCard(card)" />
     </div>
   </div>
