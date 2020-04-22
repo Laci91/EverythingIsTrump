@@ -8,14 +8,14 @@ from game.websocket.server.server_protocol import EverythingIsTrumpServerProtoco
 
 
 if __name__ == '__main__':
-    factory = EverythingIsTrumpServerFactory("ws://127.0.0.1:8765")
+    factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:80")
     factory.protocol = EverythingIsTrumpServerProtocol
 
     loop = asyncio.get_event_loop()
-    coro = loop.create_server(factory, '127.0.0.1', 8765)
+    coro = loop.create_server(factory, '0.0.0.0', 80)
     server = loop.run_until_complete(coro)
     
-    print("Created server on localhost:8765")
+    print("Created server on port 80")
 
     try:
         loop.run_forever()
