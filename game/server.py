@@ -3,8 +3,8 @@ import asyncio
 import sys
 sys.path.append('..')
 
-from game.websocket.server.server_factory import EverythingIsTrumpServerFactory
-from game.websocket.server.server_protocol import EverythingIsTrumpServerProtocol
+from server_factory import EverythingIsTrumpServerFactory
+from server_protocol import EverythingIsTrumpServerProtocol
 
 
 if __name__ == '__main__':

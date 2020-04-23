@@ -1,4 +1,4 @@
-from game.core.model import is_higher, Card, Suit, Number, CardFormatException
+from model import is_higher, Card, Suit, Number, CardFormatException
 import random
 
 MAX_NUMBER_OF_CARDS_PER_PLAYER = 13

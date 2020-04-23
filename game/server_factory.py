@@ -1,10 +1,10 @@
 from autobahn.asyncio.websocket import WebSocketServerFactory
 import json
 
-from game.core.board import Board
-from game.core.client_interface import ClientInterface
-from game.websocket.server.waiting_room import WaitingRoom
-from game.websocket.server.server_protocol import EverythingIsTrumpServerProtocol
+from board import Board
+from client_interface import ClientInterface
+from waiting_room import WaitingRoom
+from server_protocol import EverythingIsTrumpServerProtocol
 
 
 def _default(self, obj):
