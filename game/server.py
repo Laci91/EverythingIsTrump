@@ -1,13 +1,11 @@
 import asyncio
 
-import sys
-sys.path.append('..')
-
 from server_factory import EverythingIsTrumpServerFactory
 from server_protocol import EverythingIsTrumpServerProtocol
 
 
-if __name__ == '__main__':
+def application(environ, start_response):
+    start_response('200 OK', [('Content-Type','text/html')])
     factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:80")
     factory.protocol = EverythingIsTrumpServerProtocol
 
