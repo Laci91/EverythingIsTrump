@@ -1,6 +1,3 @@
-from game.core.model import Card, CardFormatException
-
-
 class Player:
     def __init__(self, name, number):
         self.name = name
