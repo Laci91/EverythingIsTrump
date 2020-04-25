@@ -25,7 +25,8 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
         super(EverythingIsTrumpServerFactory, self).__init__(*args, **kwargs)
         self.waiting_room = WaitingRoom()
         self.board = None
-        self.clients = {}
+        self.seated_clients = {}
+        self.unseated_clients = []
     
     def buildProtocol(self, *args, **kwargs):
         protocol = EverythingIsTrumpServerProtocol()
@@ -35,8 +36,9 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     def open_connection(self, client):
         print("Accepting new connection")
         if self.waiting_room.is_full():
-            client.sendClose(1)
+            client.sendClose(code=1000, reason='Game is full, you cant join anymore')
         else:
+            self.unseated_clients.append(client)
             player_map = {}
             for seat in self.waiting_room.players:
                 player_map[seat] = self.waiting_room.players[seat].name
@@ -45,9 +47,12 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             
     def close_connection(self, client):
         print ("Player %d left the game" % client.seat)
-        self.waiting_room.unregister_player(client.seat)
-        self.clients.pop(client.seat)
-        self.broadcast({"function": "lost-player", "seat": client.seat})
+        if client.seat:
+            self.waiting_room.unregister_player(client.seat)
+            self.seated_clients.pop(client.seat)
+            self.broadcast({"function": "lost-player", "seat": client.seat})
+        else:
+            self.unseated_clients.remove(client)
     
     def take_seat(self, client, name, seat):
         print("Try seating %s to %d" % (name, seat))
@@ -67,13 +72,17 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
                                "message": "Joined the seat successfully"})
             
             self.waiting_room.register_player(name, seat)
-            self.clients[seat] = client
+            self.seated_clients[seat] = client
+            self.unseated_clients.remove(client)
             client.seat = seat
-            self.broadcast({"function": "new-player", "seat": seat, "name": name})
+            self.broadcast({"function": "new-player", "seat": seat, "name": name}, send_to_unseated=True)
             print("Successfully joined the game, %d players are waiting for the game to begin" % len(
                 self.waiting_room.players))
         
         if self.waiting_room.is_full():
+            for client in self.unseated_clients:
+                client.sendClose(code=1000, reason='Game is full, you cant join anymore')
+                
             self.start_game(self.waiting_room.players)
     
     def start_game(self, players):
@@ -98,7 +107,6 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     
     def send_trick_evaluation(self, trick_status_message):
         self.broadcast({"function": "trick", "number": trick_status_message["trickNumber"],
-                        "high-card": trick_status_message["high-card"],
                         "taker": trick_status_message["taker"]})
     
     def send_round_evaluation(self, result_updates):
@@ -126,14 +134,14 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
         self.board.deal()
         if self.board.num_of_cards == 1:
             hands = {}
-            for seat in self.clients:
+            for seat in self.seated_clients:
                 hand = self.board.players[seat].hand
                 hands[seat] = hand
                 
             self.broadcast({"function": "deal", "card-on-forehead": True, "hand": hands})
         else:
-            for seat in self.clients:
-                client = self.clients[seat]
+            for seat in self.seated_clients:
+                client = self.seated_clients[seat]
                 hand = self.board.players[seat].hand
                 send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
         
@@ -142,10 +150,14 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
     def trigger_end_of_game(self):
         pass
     
-    def broadcast(self, message):
-        for client in self.clients.values():
+    def broadcast(self, message, send_to_unseated=False):
+        for client in self.seated_clients.values():
             send_text_message(client, message)
+            
+        if send_to_unseated:
+            for client in self.unseated_clients:
+                send_text_message(client, message)
     
     def send_dedicated_message(self, seat, message):
-        client = self.clients[seat]
+        client = self.seated_clients[seat]
         send_text_message(client, message)

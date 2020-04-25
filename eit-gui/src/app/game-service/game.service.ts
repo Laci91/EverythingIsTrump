@@ -10,7 +10,7 @@ import { NewPlayerUpdate } from '../model/new-player';
   providedIn: 'root'
 })
 export class GameService {
-  myWebSocket: WebSocketSubject<any> = webSocket('ws://3.126.101.237:80');
+  myWebSocket: WebSocketSubject<any> = webSocket('ws://localhost:8080');
 
   leaderboardBehaviorSubject = new BehaviorSubject<LeaderboardUpdate>(new LeaderboardUpdate());
   leaderboardUpdate: Observable<LeaderboardUpdate> = this.leaderboardBehaviorSubject.asObservable();
