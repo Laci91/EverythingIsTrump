@@ -1,18 +1,16 @@
 import asyncio
 
-import sys
-sys.path.append('..')
-
-from game.websocket.server.server_factory import EverythingIsTrumpServerFactory
-from game.websocket.server.server_protocol import EverythingIsTrumpServerProtocol
+from server_factory import EverythingIsTrumpServerFactory
+from server_protocol import EverythingIsTrumpServerProtocol
 
 
-if __name__ == '__main__':
-    factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:80")
+def application(environ, start_response):
+    start_response('200 OK', [('Content-Type','text/html')])
+    factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:8080")
     factory.protocol = EverythingIsTrumpServerProtocol
 
     loop = asyncio.get_event_loop()
-    coro = loop.create_server(factory, '0.0.0.0', 80)
+    coro = loop.create_server(factory, '0.0.0.0', 8080)
     server = loop.run_until_complete(coro)
     
     print("Created server on port 80")
