@@ -4,8 +4,7 @@ from server_factory import EverythingIsTrumpServerFactory
 from server_protocol import EverythingIsTrumpServerProtocol
 
 
-def application(environ, start_response):
-    start_response('200 OK', [('Content-Type','text/html')])
+if __name__ == '__main__':
     factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:8080")
     factory.protocol = EverythingIsTrumpServerProtocol
 
@@ -13,7 +12,7 @@ def application(environ, start_response):
     coro = loop.create_server(factory, '0.0.0.0', 8080)
     server = loop.run_until_complete(coro)
     
-    print("Created server on port 80")
+    print("Created server on port 8080")
 
     try:
         loop.run_forever()
