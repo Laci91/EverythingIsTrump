@@ -96,6 +96,9 @@ class Card:
     
     def __eq__(self, other):
         return other is not None and self.suit == other.suit and self.number == other.number
+    
+    def value(self):
+        return self.suit.strength * 14 + self.number.strength
         
 
 def is_higher(card1, card2, not_trump):
