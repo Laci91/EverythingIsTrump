@@ -5,14 +5,14 @@ from server_protocol import EverythingIsTrumpServerProtocol
 
 
 if __name__ == '__main__':
-    factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:8080")
+    factory = EverythingIsTrumpServerFactory("ws://0.0.0.0:8765")
     factory.protocol = EverythingIsTrumpServerProtocol
 
     loop = asyncio.get_event_loop()
-    coro = loop.create_server(factory, '0.0.0.0', 8080)
+    coro = loop.create_server(factory, '0.0.0.0', 8765)
     server = loop.run_until_complete(coro)
     
-    print("Created server on port 8080")
+    print("Created server on port 8765")
 
     try:
         loop.run_forever()

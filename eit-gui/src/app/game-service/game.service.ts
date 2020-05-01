@@ -5,12 +5,13 @@ import { LeaderboardUpdate, LeaderboardEntry } from '../model/leaderboard-update
 import { BidUpdate } from '../model/bid-update';
 import { PlayUpdate } from '../model/play-update';
 import { NewPlayerUpdate } from '../model/new-player';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  myWebSocket: WebSocketSubject<any> = webSocket('ws://eit-server.ew.r.appspot.com:8080');
+  myWebSocket: WebSocketSubject<any> = webSocket(environment.backendUrl);
 
   leaderboardBehaviorSubject = new BehaviorSubject<LeaderboardUpdate>(new LeaderboardUpdate());
   leaderboardUpdate: Observable<LeaderboardUpdate> = this.leaderboardBehaviorSubject.asObservable();

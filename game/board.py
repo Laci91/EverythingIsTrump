@@ -14,7 +14,7 @@ class Board:
     def __init__(self, client_interface, players, game_round, starting_player):
         self.client_interface = client_interface
         self.game_round = game_round
-        self.num_of_cards = game_round - max(0, game_round - MAX_NUMBER_OF_CARDS_PER_PLAYER)
+        self.num_of_cards = game_round - max(0, game_round - MAX_NUMBER_OF_CARDS_PER_PLAYER) * 2
         self.leading_player = starting_player
         self.players = players
         self.active_player = starting_player

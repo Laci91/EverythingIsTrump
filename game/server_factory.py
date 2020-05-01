@@ -51,8 +51,10 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             self.waiting_room.unregister_player(client.seat)
             self.seated_clients.pop(client.seat)
             self.broadcast({"function": "lost-player", "seat": client.seat})
+            print("%d seated players remaining" % len(self.seated_clients))
         else:
             self.unseated_clients.remove(client)
+            print("%d spectators remaining" % len(self.unseated_clients))
     
     def take_seat(self, client, name, seat):
         print("Try seating %s to %d" % (name, seat))
@@ -143,6 +145,7 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             for seat in self.seated_clients:
                 client = self.seated_clients[seat]
                 hand = self.board.players[seat].hand
+                hand.sort(key=lambda c: c.value())
                 send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
         
         self.board.start_bidding()
