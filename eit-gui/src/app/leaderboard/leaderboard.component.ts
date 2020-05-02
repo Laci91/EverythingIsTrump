@@ -19,7 +19,6 @@ export class LeaderboardComponent implements OnInit {
     this.gameService.leaderboardUpdate.subscribe(update => {
         let newScores = [0, 0, 0, 0]
         if (!update.scores) {
-          console.log("Update is empty, skipping");
           return;
         }
         update.scores.forEach(entry => {

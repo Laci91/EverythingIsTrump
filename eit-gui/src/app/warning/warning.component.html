@@ -1,0 +1,5 @@
+<div fxLayout="column">
+    <p *ngIf="excludedBid !== undefined"><b>Excluded bid:</b> {{excludedBid}}</p>
+    <p *ngIf="overUnder !== undefined"><b>Over/Under:</b> {{getOverUnderText()}}</p>
+    <p *ngIf="mainSuit !== undefined"><b>Suit led:</b> {{mainSuit}}</p>
+</div>

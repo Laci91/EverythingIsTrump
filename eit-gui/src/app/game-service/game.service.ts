@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { LeaderboardUpdate, LeaderboardEntry } from '../model/leaderboard-update';
 import { BidUpdate } from '../model/bid-update';
@@ -22,7 +22,7 @@ export class GameService {
   bidUpdateBehaviorSubject = new BehaviorSubject<BidUpdate>(new BidUpdate());
   bidUpdate: Observable<BidUpdate> = this.bidUpdateBehaviorSubject.asObservable();
 
-  playUpdateBehaviorSubject = new BehaviorSubject<PlayUpdate>(new PlayUpdate());
+  playUpdateBehaviorSubject = new ReplaySubject<PlayUpdate>(3);
   playUpdate: Observable<PlayUpdate> = this.playUpdateBehaviorSubject.asObservable();
 
   trickUpdateBehaviorSubject = new BehaviorSubject<number>(-1);
@@ -63,7 +63,6 @@ export class GameService {
 
   init() {
     this.myWebSocket.subscribe(incoming => {
-      console.log(incoming);
       if (incoming["function"] === "standings") {
         let standings = <any[]> incoming["standings"];
         this.updateLeaderboard(standings);

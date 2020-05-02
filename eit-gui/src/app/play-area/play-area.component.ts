@@ -22,11 +22,12 @@ export class PlayAreaComponent implements OnInit {
   ngOnInit() {
     // We don't want to clear it as soon as the last card is played, people wouldn't be able to see it.
     // The next card play will clear the area...
-    this.gameService.trickUpdate.subscribe(update => {
+    this.gameService.trickUpdate.subscribe(_ => {
       this.nextCardWillClearArea = true;
     });
 
     this.gameService.playUpdate.subscribe(update => {
+      console.log("Received play update")
       if (this.nextCardWillClearArea) {
         for (let seat in this.playedCard) {
           this.playedCard[seat] = "";
