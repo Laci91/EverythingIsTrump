@@ -1,9 +1,11 @@
-<table mdbTable mdbTableScroll scrollY="true" stickyHeader="true" maxHeight="200" bordered="true">
+<table mdbTable stickyHeader="true" maxHeight="30" bordered="true" class="table-fixed">
   <thead>
     <tr>
       <th *ngFor="let colName of displayedColumns" scope="col" class="centered bold">{{colName}}</th>
     </tr>
   </thead>
+</table>
+<table mdbTable mdbTableScroll scrollY="true" maxHeight="170" class="table-fixed">
   <tbody>
     <tr *ngFor="let pc of pointCounts">
       <th scope="row" class="centered bold">{{pc.round}}</th>

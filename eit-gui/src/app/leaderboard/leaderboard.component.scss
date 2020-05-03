@@ -4,6 +4,10 @@ table {
     background-color: white;
 }
 
+tr {
+    width: 80px;
+}
+
 th,td {
     line-height: 0px;
 }
@@ -11,6 +15,7 @@ th,td {
 .centered {
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
 .bold {
