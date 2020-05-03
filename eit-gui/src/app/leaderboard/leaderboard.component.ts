@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GameService } from '../game-service/game.service';
+import { ScrollToBottomDirective } from '../scroll-to-bottom.directive';
 
 @Component({
   selector: 'leaderboard',
@@ -7,6 +8,9 @@ import { GameService } from '../game-service/game.service';
   styleUrls: ['./leaderboard.component.scss']
 })
 export class LeaderboardComponent implements OnInit {
+  @ViewChild(ScrollToBottomDirective)
+  scroll: ScrollToBottomDirective;
+
   displayedColumns = ["Round", "1", "2", "3", "4"];
 
   pointCounts: any[];
@@ -28,6 +32,8 @@ export class LeaderboardComponent implements OnInit {
         });
         this.pointCounts = this.pointCounts.concat({"round": this.lastRound + 1, "scores": newScores});
         this.lastRound += 1;
+
+        this.scroll.scrollToBottom();
     });
     
     this.gameService.newPlayer.subscribe(update => {

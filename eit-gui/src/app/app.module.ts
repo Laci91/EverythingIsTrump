@@ -18,6 +18,7 @@ import { PlayerComponent } from './player/player.component';
 import { PlayAreaComponent } from './play-area/play-area.component';
 import { StatusPanelComponent } from './status-panel/status-panel.component';
 import { WarningComponent } from './warning/warning.component';
+import { ScrollToBottomDirective } from './scroll-to-bottom.directive';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { WarningComponent } from './warning/warning.component';
     PlayerComponent,
     PlayAreaComponent,
     StatusPanelComponent,
-    WarningComponent
+    WarningComponent,
+    ScrollToBottomDirective
   ],
   imports: [
     BrowserModule,
