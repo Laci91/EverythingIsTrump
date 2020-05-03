@@ -46,7 +46,6 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
                                        "message": "Please take a seat"})
             
     def close_connection(self, client):
-        print ("Player %d left the game" % client.seat)
         if client.seat:
             self.waiting_room.unregister_player(client.seat)
             self.seated_clients.pop(client.seat)

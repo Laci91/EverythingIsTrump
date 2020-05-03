@@ -17,6 +17,7 @@ import { GameService } from './game-service/game.service';
 import { PlayerComponent } from './player/player.component';
 import { PlayAreaComponent } from './play-area/play-area.component';
 import { StatusPanelComponent } from './status-panel/status-panel.component';
+import { WarningComponent } from './warning/warning.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { StatusPanelComponent } from './status-panel/status-panel.component';
     LeaderboardComponent,
     PlayerComponent,
     PlayAreaComponent,
-    StatusPanelComponent
+    StatusPanelComponent,
+    WarningComponent
   ],
   imports: [
     BrowserModule,
