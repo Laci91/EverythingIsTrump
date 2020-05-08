@@ -1,25 +1,45 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { MatSlider } from '@angular/material';
+import { GameService } from '../game-service/game.service';
 
 @Component({
   selector: 'bid-slider',
   templateUrl: './bid-slider.component.html',
   styleUrls: ['./bid-slider.component.scss']
 })
-export class BidSliderComponent {
+export class BidSliderComponent implements OnInit {
 
-  @Input()
-  numberOfCards: number
+  @ViewChild(MatSlider)
+  sliderElement: MatSlider;
+  numberOfCards: number;
+  proposedBid: number = 0;
 
-  @Output()
-  sendBid = new EventEmitter();
+  constructor(private gameService: GameService) { }
 
-  proposedBid: number = 0
+  ngOnInit() {
+    this.gameService.biddingTrigger.subscribe(_ => {
+      console.log(this.sliderElement);
+      setTimeout(() => this.sliderElement.focus());
+    });
 
-  constructor() { }
+    this.gameService.handUpdate.subscribe(update => {
+      this.numberOfCards = update.length;
+    });
+
+    this.gameService.singleCardUpdate.subscribe(_ => {
+      this.numberOfCards = 1;
+    });
+  }
+
+  onKeyDown(event) {
+    const key = Number(event.key);
+    if (key >= 0 && key <= this.numberOfCards) {
+      this.proposedBid = key;
+    }
+  }
 
   makeBid() {
-    console.log(this.proposedBid);
-    this.sendBid.emit(this.proposedBid);
+    this.gameService.sendBid(this.proposedBid);
   }
 
 }

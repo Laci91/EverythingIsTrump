@@ -28,21 +28,9 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.gameService.handUpdate.subscribe(update => {
-      this.numOfCards = update.length;
-    });
-
-    this.gameService.singleCardUpdate.subscribe(_ => {
-      this.numOfCards = 1;
-    });
-
     this.gameService.activePlayer.subscribe(update => {
       this.activePlayer = update;
-    })
-  }
-
-  bidHandler(bid: number) {
-    this.gameService.sendBid(bid);
+    });
   }
 
   setSeatOfActivePlayer(seat: number) {
