@@ -1,11 +1,11 @@
 <mat-grid-list cols="3" rowHeight="2.2:1">
   <mat-grid-tile><warning></warning></mat-grid-tile>
-  <mat-grid-tile><player seat="3" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile [ngClass]="activePlayer == 3 ? 'active' : 'inactive'"><player seat="3" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><leaderboard></leaderboard></mat-grid-tile>
-  <mat-grid-tile><player seat="2" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile [ngClass]="activePlayer == 2 ? 'active' : 'inactive'"><player seat="2" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><play-area></play-area></mat-grid-tile>
-  <mat-grid-tile><player seat="4" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile [ngClass]="activePlayer == 4 ? 'active' : 'inactive'"><player seat="4" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><status-panel></status-panel></mat-grid-tile>
-  <mat-grid-tile><player seat="1" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
+  <mat-grid-tile [ngClass]="activePlayer == 1 ? 'active' : 'inactive'"><player seat="1" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><bid-slider *ngIf="biddingPanelEnabled" [numberOfCards]="numOfCards" (sendBid)="bidHandler($event)"></bid-slider></mat-grid-tile>
 </mat-grid-list>
