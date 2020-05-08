@@ -3,9 +3,10 @@ from aenum import AutoNumberEnum
 
 
 class Suit(AutoNumberEnum):
-    def __init__(self, strength, short_name):
+    def __init__(self, strength, short_name, user_friendly_order_number):
         self.strength = strength
         self.short_name = short_name
+        self.user_friendly_order_number = user_friendly_order_number
         
     def __repr__(self):
         return self.short_name
@@ -27,10 +28,10 @@ class Suit(AutoNumberEnum):
             
         raise CardFormatException(short_name + " is not a valid Suit")
         
-    SPADES = (4, "S")
-    HEARTS = (3, "H")
-    DIAMONDS = (2, "D")
-    CLUBS = (1, "C")
+    SPADES = (4, "S", 4)
+    HEARTS = (3, "H", 3)
+    DIAMONDS = (2, "D", 1)
+    CLUBS = (1, "C", 2)
     
 
 class Number(AutoNumberEnum):
@@ -99,7 +100,9 @@ class Card:
     
     def value(self):
         return self.suit.strength * 14 + self.number.strength
-        
+    
+    def ordering_value(self):
+        return self.suit.user_friendly_order_number * 14 + self.number.strength
 
 def is_higher(card1, card2, not_trump):
     if not_trump:

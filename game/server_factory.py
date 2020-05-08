@@ -144,7 +144,7 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             for seat in self.seated_clients:
                 client = self.seated_clients[seat]
                 hand = self.board.players[seat].hand
-                hand.sort(key=lambda c: c.value())
+                hand.sort(key=lambda c: c.ordering_value())
                 send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
         
         self.board.start_bidding()
