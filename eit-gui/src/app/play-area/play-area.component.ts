@@ -27,7 +27,6 @@ export class PlayAreaComponent implements OnInit {
     });
 
     this.gameService.playUpdate.subscribe(update => {
-      console.log("Received play update")
       if (this.nextCardWillClearArea) {
         for (let seat in this.playedCard) {
           this.playedCard[seat] = "";

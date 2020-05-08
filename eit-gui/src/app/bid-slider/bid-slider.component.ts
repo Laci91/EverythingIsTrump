@@ -18,7 +18,6 @@ export class BidSliderComponent implements OnInit {
 
   ngOnInit() {
     this.gameService.biddingTrigger.subscribe(_ => {
-      console.log(this.sliderElement);
       setTimeout(() => this.sliderElement.focus());
     });
 
@@ -27,7 +26,9 @@ export class BidSliderComponent implements OnInit {
     });
 
     this.gameService.singleCardUpdate.subscribe(_ => {
-      this.numberOfCards = 1;
+      if (!this.numberOfCards) {
+        this.numberOfCards = 1;
+      }
     });
   }
 

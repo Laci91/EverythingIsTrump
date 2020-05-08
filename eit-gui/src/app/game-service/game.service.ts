@@ -78,7 +78,8 @@ export class GameService {
         this.updatePlay(seat, card);
         this.updateStatus(`Player #${seat} played ${card}`);
       } else if (incoming["function"] == "deal") {
-        if (incoming["card-on-forehead"]) {
+        console.log(incoming);
+        if (incoming["card-on-forehead"] === true) {
           const hands = <any[]> incoming["hand"];
           this.updateSingleCards(hands);
         } else {
