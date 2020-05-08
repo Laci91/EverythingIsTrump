@@ -9,7 +9,8 @@ import { GameService } from './game-service/game.service';
 export class AppComponent implements OnInit {
   title = 'eit-gui';
   numOfCards: number; // TODO: Move to bid-slider
-  seatOfActivePlayer: number;
+  player: number;
+  activePlayer: number;
   biddingPanelEnabled: boolean;
 
   constructor(private gameService: GameService) {}
@@ -22,7 +23,7 @@ export class AppComponent implements OnInit {
     });
 
     this.gameService.bidUpdate.subscribe(update => {
-      if (update.seat == this.seatOfActivePlayer) {
+      if (update.seat == this.player) {
         this.biddingPanelEnabled = false;
       }
     });
@@ -33,6 +34,10 @@ export class AppComponent implements OnInit {
 
     this.gameService.singleCardUpdate.subscribe(_ => {
       this.numOfCards = 1;
+    });
+
+    this.gameService.activePlayer.subscribe(update => {
+      this.activePlayer = update;
     })
   }
 
@@ -41,6 +46,6 @@ export class AppComponent implements OnInit {
   }
 
   setSeatOfActivePlayer(seat: number) {
-    this.seatOfActivePlayer = seat;
+    this.player = seat;
   }
 }
