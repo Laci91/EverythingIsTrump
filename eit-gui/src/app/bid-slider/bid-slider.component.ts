@@ -33,6 +33,10 @@ export class BidSliderComponent implements OnInit {
   }
 
   onKeyDown(event) {
+    if (event.key == "Enter") {
+      this.makeBid();
+      return;
+    }
     const key = Number(event.key);
     if (key >= 0 && key <= this.numberOfCards) {
       this.proposedBid = key;
