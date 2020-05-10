@@ -1,6 +1,7 @@
 from autobahn.asyncio.websocket import WebSocketServerFactory
 import json
 
+from model import Suit
 from board import Board
 from client_interface import ClientInterface
 from waiting_room import WaitingRoom
@@ -144,7 +145,10 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
             for seat in self.seated_clients:
                 client = self.seated_clients[seat]
                 hand = self.board.players[seat].hand
-                hand.sort(key=lambda c: c.ordering_value())
+                has_club_void = not any([1 for c in hand if c.suit == Suit.CLUBS])
+                has_heart_void = not any([1 for c in hand if c.suit == Suit.HEARTS])
+                num_of_voids = 4 - len(set([c.suit for c in hand]))
+                hand.sort(key=lambda c: c.ordering_value(num_of_voids, has_club_void, has_heart_void))
                 send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
         
         self.board.start_bidding()
