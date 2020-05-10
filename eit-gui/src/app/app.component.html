@@ -5,7 +5,7 @@
   <mat-grid-tile [ngClass]="activePlayer == 2 ? 'active' : 'inactive'"><player seat="2" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><play-area></play-area></mat-grid-tile>
   <mat-grid-tile [ngClass]="activePlayer == 4 ? 'active' : 'inactive'"><player seat="4" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
-  <mat-grid-tile><status-panel></status-panel></mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
   <mat-grid-tile [ngClass]="activePlayer == 1 ? 'active' : 'inactive'"><player seat="1" (seatSelected)="setSeatOfActivePlayer($event)"></player></mat-grid-tile>
   <mat-grid-tile><bid-slider *ngIf="biddingPanelEnabled"></bid-slider></mat-grid-tile>
 </mat-grid-list>
