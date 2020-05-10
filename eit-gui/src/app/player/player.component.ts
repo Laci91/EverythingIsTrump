@@ -147,8 +147,8 @@ export class PlayerComponent implements OnInit {
   getStyling(index: number) {
     return {
       'position': 'relative',
-      'width.px': 75,
-      'margin-right.px': -50
+      'width.px': 100,
+      'margin-right.px': -70
     }
   }
 
