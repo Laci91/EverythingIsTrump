@@ -1,21 +1,18 @@
-.active {
-    font-weight: bold;
-}
-.inactive {
-    font-weight: normal;
-}
 .card-img {
-    width: 75px;
+    width: 100px;
     position: relative;
 }
 .fix-div {
-    height: 120px;
+    height: 150px;
     width: 450px;
     display: flex;
 }
 .name-container {
     margin-left: auto;
     margin-right: auto;
+    height: 50px;
+    display: inline-block;
+    vertical-align: bottom;
 }
 .centered {
     display: block;
