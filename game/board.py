@@ -49,6 +49,7 @@ class Board:
         excluded = None if len(previous_bids) != 3 else self.num_of_cards - sum(previous_bids)
         
         print("Excluded bid: %s; Submitted bid: %s" % (excluded, bid))
+        
         if excluded is not None and bid == excluded:
             self.client_interface.send_error("The selected bid is forbidden")
             return

@@ -19,6 +19,9 @@ class Suit(AutoNumberEnum):
 
     def __eq__(self, other):
         return other is not None and self.strength == other.strength
+    
+    def __hash__(self):
+        return self.strength
        
     @classmethod
     def from_short_name(cls, short_name):
@@ -28,10 +31,10 @@ class Suit(AutoNumberEnum):
             
         raise CardFormatException(short_name + " is not a valid Suit")
         
-    SPADES = (4, "S", 4)
-    HEARTS = (3, "H", 3)
-    DIAMONDS = (2, "D", 1)
-    CLUBS = (1, "C", 2)
+    SPADES = (4, "S", lambda position_override: 4 if not position_override else position_override[Suit.SPADES])
+    HEARTS = (3, "H", lambda position_override: 3 if not position_override else position_override[Suit.HEARTS])
+    DIAMONDS = (2, "D", lambda position_override: 1 if not position_override else position_override[Suit.DIAMONDS])
+    CLUBS = (1, "C", lambda position_override: 2 if not position_override else position_override[Suit.CLUBS])
     
 
 class Number(AutoNumberEnum):
@@ -101,8 +104,13 @@ class Card:
     def value(self):
         return self.suit.strength * 14 + self.number.strength
     
-    def ordering_value(self):
-        return self.suit.user_friendly_order_number * 14 + self.number.strength
+    def ordering_value(self, num_of_voids, has_club_void, has_heart_void):
+        special_order = None
+        if num_of_voids == 1 and has_club_void:
+            special_order = {Suit.CLUBS: 0, Suit.DIAMONDS: 1, Suit.SPADES: 2, Suit.HEARTS: 3}
+        elif num_of_voids == 1 and has_heart_void:
+            special_order = {Suit.HEARTS: 0, Suit.CLUBS: 1, Suit.DIAMONDS: 2, Suit.SPADES: 3}
+        return self.suit.user_friendly_order_number(special_order) * 14 + self.number.strength
 
 def is_higher(card1, card2, not_trump):
     if not_trump:

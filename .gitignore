@@ -1,2 +1,4 @@
 /venv/
 eit.zip
+/game/__pycache__
+/game/gui

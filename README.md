@@ -45,4 +45,46 @@ Bid 3, took 1 trick: -2 * 2 = -4 pts
 
 ## Technology stack
 
-TBC
+The application has a 2-tier architecture, a server implemented in Python, and a GUI implemented in Angular
+
+### Backend
+
+The server is implemented in Python 3.7 (also compatible with similar version numbers, should be 3.4+)
+Game interactions happen via websocket communication, using the Autobahn framework (version 20)
+The server expects messages with JSON format, with one mandatory tag "function" which describes the intention of the message.
+Each message type has different mandatory parameters (details are currently embedded into `server_factory.py`, 
+but probably should be extracted into a separate class.
+The server is deployed to an AWS EC2 instance.
+
+#### Downloading and starting up the server on a Linux machine
+
+Get the codebase, install the required libraries and start up a server on port 8765.
+
+`git clone https://github.com/Laci91/EverythingIsTrump.git src`
+`sudo apt-get install python3-pip (Skip is you have pip3 installed)`
+`cd src/game`
+`pip3 install -r requirements.txt`
+`python3 server.py`
+
+### Frontend
+
+The frontend runs on Angular 7, using several components from the Angular Material UI framework as well as some
+directives from FX Layout and the TableModule from Angular Bootstrap.
+
+#### Serving the UI locally
+
+This assumes you downloaded the codebase and running a server on localhost as described above.
+These steps will run the UI on localhost:9000.
+
+`cd src/eit-gui`
+`npm install`
+`ng serve --port 9000`
+
+#### Build UI code
+
+These steps will compile the source files into minified JS files, CSS files, card pictures and an index.htlm page.
+These will be placed in the `src/eit-gui/dist/eit-gui` folder.
+
+`cd src/eit-gui`
+`npm install`
+`ng build --prod`
