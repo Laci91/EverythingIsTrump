@@ -35,7 +35,7 @@ export class GameService {
   successfulSeatingBehaviorSubject = new BehaviorSubject<number>(-1);
   successfulSeating: Observable<number> = this.successfulSeatingBehaviorSubject.asObservable();
 
-  handUpdateBehaviorSubject = new BehaviorSubject<HandUpdate>(new HandUpdate());
+  handUpdateBehaviorSubject = new ReplaySubject<HandUpdate>(5);
   handUpdate: Observable<HandUpdate> = this.handUpdateBehaviorSubject.asObservable();
 
   singleCardUpdateBehaviorSubject = new BehaviorSubject<any[]>([]);
