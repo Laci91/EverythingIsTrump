@@ -9,10 +9,10 @@ import { GameService } from '../game-service/game.service';
 export class WarningComponent implements OnInit {
 
   bids: number[] = [];
-  numberOfCards: number = 0;
-  excludedBid: number;
-  overUnder: number;
-  mainSuit: string;
+  numberOfCards?: number;
+  excludedBid?: number;
+  overUnder?: number;
+  mainSuit?: string;
 
   constructor(private gameService: GameService) { }
 
@@ -28,18 +28,22 @@ export class WarningComponent implements OnInit {
       }
     });
 
-    this.gameService.singleCardUpdate.subscribe(_ => {
-      this.numberOfCards = 1;
-      this.bids = [];
-      this.excludedBid = undefined;
-      this.overUnder = undefined;
+    this.gameService.singleCardUpdate.subscribe(update => {
+      if (update[1]) {
+        this.numberOfCards = 1;
+        this.bids = [];
+        this.excludedBid = undefined;
+        this.overUnder = undefined;
+      }
     });
 
     this.gameService.handUpdate.subscribe(update => {
-      this.numberOfCards = update.hand.length
-      this.bids = [];
-      this.excludedBid = undefined;
-      this.overUnder = undefined;
+      if (update) {
+        this.numberOfCards = update.hand.length
+        this.bids = [];
+        this.excludedBid = undefined;
+        this.overUnder = undefined;
+      }
     });
 
     this.gameService.playUpdate.subscribe(update => {
