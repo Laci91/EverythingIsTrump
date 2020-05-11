@@ -10,7 +10,7 @@
     <div class="attribute-class">Tricks: {{tricks !== undefined ? tricks : '-'}}</div>
   </div>
   <div *ngIf="seatingRequired">
-    <input class="centered" matInput type="text" (input)="name = $event.target.value" />
+    <input class="centered" matInput type="text" (input)="name = $event.target.value" (keydown.enter)="takeSeat()" />
     <button class="centered" mat-button (click)="takeSeat()">Take this seat</button>
   </div>
 </div>
