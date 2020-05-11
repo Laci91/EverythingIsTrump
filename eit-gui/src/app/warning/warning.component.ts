@@ -36,7 +36,7 @@ export class WarningComponent implements OnInit {
     });
 
     this.gameService.handUpdate.subscribe(update => {
-      this.numberOfCards = update.length
+      this.numberOfCards = update.hand.length
       this.bids = [];
       this.excludedBid = undefined;
       this.overUnder = undefined;

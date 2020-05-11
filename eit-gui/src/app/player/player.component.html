@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="name-container" *ngIf="!seatingRequired">
-    <div class="name-class"><b>{{name}}</b></div>
+    <div [ngClass]="startingPlayer ? 'starting' : 'name-class'"><b>{{name}}</b></div>
     <div class="attribute-class">Bid: {{bid !== undefined ? bid : '-'}}</div>
     <div class="attribute-class">Tricks: {{tricks !== undefined ? tricks : '-'}}</div>
   </div>

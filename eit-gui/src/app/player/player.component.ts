@@ -19,6 +19,7 @@ export class PlayerComponent implements OnInit {
 
   seatingRequired: boolean = true;
   cardplayRequired: boolean = false;
+  startingPlayer: boolean = false;
   active: boolean;
   bid: number | undefined;
   tricks: number | undefined;
@@ -93,11 +94,13 @@ export class PlayerComponent implements OnInit {
 
     this.gameService.handUpdate.subscribe(update => {
       if (this.instructable) {
-        this.cards = update;
+        this.cards = update.hand;
       } else {
-        this.cards = new Array(update.length);
+        this.cards = new Array(update.hand.length);
         this.cards.fill("");
       }
+
+      this.startingPlayer = update.startingPlayer == this.seat;
       this.tricks = undefined;
       this.bid = undefined;
       this.hiddenHandsInverted = false;
@@ -107,6 +110,7 @@ export class PlayerComponent implements OnInit {
       if (this.seat in update) {
         this.cards = update[this.seat];
         this.hiddenHandsInverted = true;
+        this.startingPlayer = 1 == this.seat;
       }
     });
 

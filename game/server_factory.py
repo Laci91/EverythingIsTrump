@@ -140,7 +140,8 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
                 hand = self.board.players[seat].hand
                 hands[seat] = hand
                 
-            self.broadcast({"function": "deal", "card-on-forehead": True, "hand": hands})
+            self.broadcast({"function": "deal", "starting-player": next_round % 4,
+                            "card-on-forehead": True, "hand": hands})
         else:
             for seat in self.seated_clients:
                 client = self.seated_clients[seat]
@@ -149,7 +150,8 @@ class EverythingIsTrumpServerFactory(WebSocketServerFactory, ClientInterface):
                 has_heart_void = not any([1 for c in hand if c.suit == Suit.HEARTS])
                 num_of_voids = 4 - len(set([c.suit for c in hand]))
                 hand.sort(key=lambda c: c.ordering_value(num_of_voids, has_club_void, has_heart_void))
-                send_text_message(client, {"function": "deal", "card-on-forehead": False, "hand": hand})
+                send_text_message(client, {"function": "deal", "starting-player": next_round % 4,
+                                           "card-on-forehead": False, "hand": hand})
         
         self.board.start_bidding()
     
