@@ -22,7 +22,7 @@ export class BidSliderComponent implements OnInit {
     });
 
     this.gameService.handUpdate.subscribe(update => {
-      this.numberOfCards = update.length;
+      this.numberOfCards = update.hand.length;
     });
 
     this.gameService.singleCardUpdate.subscribe(_ => {

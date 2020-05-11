@@ -5,6 +5,7 @@ import { LeaderboardUpdate, LeaderboardEntry } from '../model/leaderboard-update
 import { BidUpdate } from '../model/bid-update';
 import { PlayUpdate } from '../model/play-update';
 import { NewPlayerUpdate } from '../model/new-player';
+import { HandUpdate } from '../model/hand-update';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -34,8 +35,8 @@ export class GameService {
   successfulSeatingBehaviorSubject = new BehaviorSubject<number>(-1);
   successfulSeating: Observable<number> = this.successfulSeatingBehaviorSubject.asObservable();
 
-  handUpdateBehaviorSubject = new BehaviorSubject<string[]>([]);
-  handUpdate: Observable<string[]> = this.handUpdateBehaviorSubject.asObservable();
+  handUpdateBehaviorSubject = new BehaviorSubject<HandUpdate>(new HandUpdate());
+  handUpdate: Observable<HandUpdate> = this.handUpdateBehaviorSubject.asObservable();
 
   singleCardUpdateBehaviorSubject = new BehaviorSubject<any[]>([]);
   singleCardUpdate: Observable<any[]> = this.singleCardUpdateBehaviorSubject.asObservable();
@@ -84,7 +85,8 @@ export class GameService {
           this.updateSingleCards(hands);
         } else {
           const hand = <string[]> incoming["hand"];
-          this.updateHand(hand);
+          const startingPlayer = <number> incoming["starting-player"];
+          this.updateHand(hand, startingPlayer);
         }
         this.updateStatus("A new hand has begun, you received new cards");
       } else if (incoming["function"] == "trick") {
@@ -183,8 +185,11 @@ export class GameService {
     this.successfulSeatingBehaviorSubject.next(seat);
   }
 
-  updateHand(hand: string[]) {
-    this.handUpdateBehaviorSubject.next(hand);
+  updateHand(hand: string[], startingPlayer: number) {
+    const handUpd = new HandUpdate();
+    handUpd.hand = hand;
+    handUpd.startingPlayer = startingPlayer;
+    this.handUpdateBehaviorSubject.next(handUpd);
   }
 
   updateSingleCards(hands: any[]) {
