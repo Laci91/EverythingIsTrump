@@ -127,7 +127,7 @@ export class PlayerComponent implements OnInit {
       if (update) {
         this.cardplayRequired = true;
       }
-    })
+    });
   }
 
   getImagePath(card: string) {
@@ -145,7 +145,9 @@ export class PlayerComponent implements OnInit {
   }
 
   takeSeat() {
-    this.gameService.takeSeat(this.seat, this.name);
+    if (this.name) {
+      this.gameService.takeSeat(this.seat, this.name);
+    }
   }
 
   getStyling(index: number) {
