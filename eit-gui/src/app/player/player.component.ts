@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { GameService } from '../game-service/game.service';
 
 @Component({
@@ -7,6 +7,9 @@ import { GameService } from '../game-service/game.service';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
+
+  @ViewChild('cardplayer')
+  cardPlayerRef: ElementRef;
 
   @Input()
   seat: number;
@@ -23,10 +26,19 @@ export class PlayerComponent implements OnInit {
   active: boolean;
   bid: number | undefined;
   tricks: number | undefined;
+  mainSuit?: string;
   name: string;
   visible: boolean = false;
   cards: string[];
+  singleCandidateCard?: string;
   hiddenHandsInverted = false;
+
+  @HostListener("document:keydown", ["$event"])
+  handleEnter(event: KeyboardEvent) {
+    if (event.key == "Enter" && this.singleCandidateCard) {
+      this.playCard(this.singleCandidateCard);
+    }
+  }
 
   constructor(private gameService: GameService) { }
 
@@ -44,6 +56,9 @@ export class PlayerComponent implements OnInit {
       if (update == this.seat) {
         this.tricks += 1;
       }
+
+      this.mainSuit = undefined;
+      this.singleCandidateCard = undefined;
     });
 
     this.gameService.activePlayer.subscribe(update => {
@@ -115,17 +130,31 @@ export class PlayerComponent implements OnInit {
     });
 
     this.gameService.playUpdate.subscribe(update => {
+      // Remove played card if it was played from this hand
       if ((update.seat == this.seat) && this.visible) {
         this.cards = this.cards.filter(item => item !== update.card);
         this.cardplayRequired = false;
       } else if (update.seat == this.seat) {
         this.cards.pop();
       }
+
+      // Identify led suit and choose single play candidate if there is one
+      if (this.mainSuit === undefined) {
+        this.mainSuit = update.card.charAt(0)
+        const cardsInMainSuit = this.cards.filter(c => c.charAt(0) == this.mainSuit);
+        if (cardsInMainSuit.length === 1) {
+          this.singleCandidateCard = cardsInMainSuit[0];
+        }
+      }
     });
 
     this.gameService.playTrigger.subscribe(update => {
       if (update) {
         this.cardplayRequired = true;
+        if (this.cards.length == 1) {
+          this.singleCandidateCard = this.cards[0];
+        }
+        setTimeout(() => this.cardPlayerRef.nativeElement.focus());
       }
     });
   }
@@ -138,7 +167,7 @@ export class PlayerComponent implements OnInit {
     }
   }
 
-  playCard(card: string) {
+  playCard(card?: string) {
     if (this.instructable && this.cardplayRequired) {
       this.gameService.sendPlay(card);
     }
@@ -150,7 +179,7 @@ export class PlayerComponent implements OnInit {
     }
   }
 
-  getStyling(index: number) {
+  getStyling() {
     return {
       'position': 'relative',
       'width.px': 100,

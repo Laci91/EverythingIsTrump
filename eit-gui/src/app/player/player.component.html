@@ -1,6 +1,7 @@
 <div>
   <div class="fix-div">
-    <div *ngFor="let card of cards; let i = index" [ngStyle]="getStyling(i)">
+    <button #cardplayer hidden="true" (keydown.enter)="playCard()"></button>
+    <div *ngFor="let card of cards; let i = index" [ngStyle]="getStyling()">
       <img class="card-img" [src]="getImagePath(card)" (click)="playCard(card)" />
     </div>
   </div>
